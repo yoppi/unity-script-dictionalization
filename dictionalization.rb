@@ -8,10 +8,18 @@ require 'nokogiri'
 require 'open-uri'
 require 'set'
 
-REFERENCE_ROOT = "http://docs.unity3d.com/Documentation/ScriptReference/10_reference.Classes.html"
+URLS = [
+  "http://docs.unity3d.com/Documentation/ScriptReference/10_reference.Classes.html",
+  "http://docs.unity3d.com/Documentation/ScriptReference/10_reference.Enumerations.html"
+]
 
-(Nokogiri::HTML.parse(open(REFERENCE_ROOT))/"div.scriprefmain ul li a").inject(Set.new) {|ret, e|
-  ret << e.inner_text
-}.sort.each {|w| puts w }
+dict = Set.new
+URLS.each {|url|
+  (Nokogiri::HTML.parse(open(url))/"div.scriprefmain ul li a").each {|e|
+    dict << e.inner_text
+  }
+}
+
+dict.sort.each {|w| puts w }
 
 
